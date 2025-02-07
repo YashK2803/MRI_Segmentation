@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MRI Detection</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    h1 { color: #333; }
+    form { margin-bottom: 20px; }
+    footer { margin-top: 40px; font-size: 0.9em; color: #666; }
+  </style>
+</head>
+<body>
+  <h1>MRI Detection</h1>
+  
+  <form id="upload-form" action="/analyze" method="post" enctype="multipart/form-data">
+    <label for="file">Choose Image:</label>
+    <input type="file" id="file" name="file" accept="image/*" required>
+    <button type="submit">Analyze Image</button>
+  </form>
+
+  <div id="result">
+    <h2>Analysis Result:</h2>
+    <img id="result-image" src="" alt="Processed result will appear here" style="max-width: 500px;">
+  </div>
+
+  <footer>
+    <p>Created by XYZ and ABC</p>
+    <p>© 2025 MRI Detection. All rights reserved.</p>
+  </footer>
+
+  <script>
+    document.getElementById('upload-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      try {
+        const response = await fetch(this.action, {
+          method: 'POST',
+          body: formData
+        });
+        const result = await response.json();
+        if (result.processed_image_url) {
+          document.getElementById('result-image').src = result.processed_image_url + '?t=' + new Date().getTime();
+        } else {
+          alert('Error: ' + result.error);
+        }
+      } catch(error) {
+        alert('An error occurred. Please try again.');
+      }
+    });
+  </script>
+</body>
+</html>
